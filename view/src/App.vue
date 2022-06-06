@@ -6,12 +6,30 @@
 </template>
 
 <script>
+// 封装前
+// export default {
+//   mounted() {
+//     this.$axios
+//       .get('http://localhost:3000/users/find')
+//       .then((res) => {
+//         console.log(res.data)
+//       })
+//       .catch((err) => {
+//         console.error('请求异常', err)
+//       })
+//   }
+// }
+
 export default {
-  mounted() {
-    this.$axios
-      .get('http://localhost:3000/users/find')
+  create() {
+    this.$http({
+      path: 'https://cnodejs.org/api/v1/topics',
+      method: 'get',
+      parmas: {}
+    })
       .then((res) => {
-        console.log(res.data)
+        console.log(res)
+        console.log('111')
       })
       .catch((err) => {
         console.error('请求异常', err)
