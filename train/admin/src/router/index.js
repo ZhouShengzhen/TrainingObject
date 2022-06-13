@@ -11,7 +11,27 @@ const routes = [
   },
   {
     path: '/admin',
-    name: 'about'
+    name: 'Home',
+    component: () => import('@/views/home/index.vue'),
+    //redirect: '/admin/companies/list',
+    children: [
+      {
+        path: '/admin/companies/list',
+        name: 'CompaniesList',
+        component: () => import('@/views/companies/index.vue'),
+        mate: {
+          title: '租户中心'
+        }
+      },
+      {
+        path: '/admin/companies/add',
+        name: 'CompaniesAdd',
+        component: () => import('@/views/companies/add.vue'),
+        mate: {
+          title: '添加租户'
+        }
+      }
+    ]
   }
 ]
 
