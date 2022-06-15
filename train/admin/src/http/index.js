@@ -1,52 +1,58 @@
 import axios from 'axios'
 
 let instance = axios.create({
-    baseURL: 'http://localhost:3000',
-    timeout: 5000
+  baseURL: 'http://localhost:3000',
+  timeout: 5000
 })
 
-instance.interceptors.request.use(config => {
-    if (localStorage.token) {
-        config.headers.authorization = 'Bearer ' + localStorage.token;
-    }
+instance.interceptors.request.use(
+  (config) => {
+    // if (localStorage.token) {
+    //   config.headers.authorization = 'Bearer ' + localStorage.token
+    // }
+    config.headers.authorization =
+      'Bearer ' +
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsIl9pZCI6IjYyYTgyNTg4OGM2ODRkODhmYmQ1MTk0OSIsImlhdCI6MTY1NTE4NzgxMywiZXhwIjoxNjU1NzkyNjEzfQ.ypkK1J9y3AvLePcJFe729fGGmhkcYhGK92m77ZSDu0I'
     return config
-}, err => {
+  },
+  (err) => {
     console.error('请求失败', err)
-})
+  }
+)
 
-instance.interceptors.response.use(res => {
+instance.interceptors.response.use(
+  (res) => {
     //请求成功对响应数据做处理
     return res //该返回对象会传到请求方法的响应对象中
-}, err => {
+  },
+  (err) => {
     // 响应错误处理
     // location.href = '/login'
-    return Promise.reject(err);
-})
+    return Promise.reject(err)
+  }
+)
 
 async function http(option = {}) {
+  let result = null
+  if (option.method === 'get' || option.method === 'delete') {
+    await instance[option.method](option.path, { params: option.params })
+      .then((res) => {
+        result = res.data
+      })
+      .catch((err) => {
+        result = err
+      })
+  } else if (option.method === 'post' || option.method === 'put') {
+    await instance[option.method](option.path, option.params)
+      .then((res) => {
+        result = res.data
+      })
+      .catch((err) => {
+        result = err
+      })
+  }
 
-    let result = null
-    if (option.method === 'get' || option.method === 'delete') {
-        await instance[option.method](
-            option.path,
-            { params: option.params }
-        ).then(res => {
-            result = res.data
-        }).catch(err => {
-            result = err
-        })
-    } else if (option.method === 'post' || option.method === 'put') {
-        await instance[option.method](
-            option.path,
-            option.params
-        ).then(res => {
-            result = res.data
-        }).catch(err => {
-            result = err
-        })
-    }
-
-    return result
+  return result
 }
 
 export default http

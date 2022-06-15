@@ -7,31 +7,65 @@ const routes = [
   {
     path: '/',
     name: 'Hello',
-    component: () => import('@/views/Hello.vue')
+    component: () => import('@/views/index.vue')
   },
   {
     path: '/admin',
     name: 'Home',
     component: () => import('@/views/home/index.vue'),
-    //redirect: '/admin/companies/list',
+    redirect: '/admin/companies/list',
     children: [
       {
-        path: '/admin/companies/list',
-        name: 'CompaniesList',
-        component: () => import('@/views/companies/index.vue'),
+        path: '/admin/companies',
+        name: 'Companies',
+        redirect: '/admin/companies/list',
+        component: () => import('@/views/companies/list.vue'),
         mate: {
           title: '租户中心'
         }
       },
       {
-        path: '/admin/companies/add',
-        name: 'CompaniesAdd',
-        component: () => import('@/views/companies/add.vue'),
+        path: '/admin/companies/list',
+        name: 'CompaniesList',
+        component: () => import('@/views/companies/list.vue'),
+        mate: {
+          title: '租户中心'
+        }
+      },
+      {
+        path: '/admin/companies/staffs',
+        name: 'CompaniesStaffs',
+        component: () => import('@/views/companies/staffs.vue'),
+        mate: {
+          title: '添加租户'
+        }
+      },
+      {
+        path: '/admin/companies/detail',
+        name: 'CompaniesDetail',
+        component: () => import('@/views/companies/detail.vue'),
         mate: {
           title: '添加租户'
         }
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/admins/login.vue'),
+    mate: {
+      title: '用户登陆'
+    }
+  },
+
+  {
+    path: '/admin/companies/detail',
+    name: 'CompaniesDetail',
+    component: () => import('@/views/companies/detail.vue'),
+    mate: {
+      title: '添加租户'
+    }
   }
 ]
 

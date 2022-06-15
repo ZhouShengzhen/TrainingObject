@@ -7,9 +7,14 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const MongoConnect = require('./db')
 const cors = require('koa2-cors')
+const koajwt = require('koa-jwt')
 
 const index = require('./routes/index')
 const companies = require('./routes/companies')
+const admins = require('./routes/admins')
+const upload = require('./routes/upload')
+const compacts = require('./routes/compacts')
+const lines = require('./routes/lines')
 
 // error handler
 onerror(app)
@@ -30,7 +35,13 @@ app.use(
     extension: 'ejs'
   })
 )
-
+app.use(
+  koajwt({
+    secret: 'train-server-jwt'
+  }).unless({
+    path: [/^\/admins\/login/, /^\/admins\/reg/]
+  })
+)
 // logger
 app.use(async (ctx, next) => {
   const start = new Date()
@@ -42,6 +53,10 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(companies.routes(), companies.allowedMethods())
+app.use(admins.routes(), admins.allowedMethods())
+app.use(upload.routes(), upload.allowedMethods())
+app.use(compacts.routes(), compacts.allowedMethods())
+app.use(lines.routes(), lines.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

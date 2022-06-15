@@ -1,11 +1,13 @@
 <template>
   <el-container>
     <el-header>
-      <div class="sys-title">租户管理系统</div>
+      <div class="sys-title">
+        <img src="../../assets/logo.png" class="logo" alt="" />
+        租户管理系统
+      </div>
       <div class="header-right">
-        <el-link :underline="false" @click="goWeb" style="margin-right: 20px"
-          >网站首页</el-link
-        >
+        <img src="../../assets/defaultAvatar.jpeg" class="avatar" alt="" />
+        <p class="name avatarname">用户名</p>
         <el-link :underline="false"></el-link>
         <el-link :underline="false" @click="exit">退出</el-link>
       </div>
@@ -21,31 +23,32 @@
           style="border: 0"
           router
         >
-          <el-submenu>
+          <el-submenu index="/admin/companies">
             <template slot="title">
               <i class="el-icon-s-custom"></i>
               <span>租户管理</span>
             </template>
-            <el-menu-item>租户中心</el-menu-item>
-            <el-menu-item>租户员工</el-menu-item>
-            <el-menu-item>租户账号</el-menu-item>
+            <el-menu-item index="/admin/companies/list">租户中心</el-menu-item>
+            <el-menu-item index="/admin/companies/staffs">
+              租户员工</el-menu-item
+            >
           </el-submenu>
-          <el-submenu>
+          <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-reading"></i>
               <span>店铺管理</span>
             </template>
-            <el-menu-item>店铺信息</el-menu-item>
-            <el-menu-item>店铺活动</el-menu-item>
-            <el-menu-item>员工列表</el-menu-item>
+            <el-menu-item index="1-1">店铺信息</el-menu-item>
+            <el-menu-item index="1-2">店铺活动</el-menu-item>
+            <el-menu-item index="1-3">员工列表</el-menu-item>
           </el-submenu>
-          <el-menu-item>
+          <el-menu-item index="2">
             <template slot="title">
               <i class="el-icon-chat-line-square"></i>
               <span>物业费用</span>
             </template>
           </el-menu-item>
-          <el-menu-item>
+          <el-menu-item index="3">
             <template slot="title">
               <i class="el-icon-magic-stick"></i>
               <span>系统设置</span>
@@ -133,5 +136,20 @@ export default {
 .header-right {
   display: flex;
   align-items: center;
+}
+.logo {
+  height: 50px;
+  width: 50px;
+  margin-right: 5px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  vertical-align: middle;
+  display: inline-block;
+  margin: 10px;
 }
 </style>
