@@ -1,4 +1,4 @@
-let mongoose = require('mongoose')
+let mongoose = require("mongoose")
 
 let schema = new mongoose.Schema({
   //合同号
@@ -8,7 +8,7 @@ let schema = new mongoose.Schema({
   //租赁楼层
   level: {
     type: String,
-    default: ''
+    default: ""
   },
   //门牌编号
   doorNum: {
@@ -27,10 +27,10 @@ let schema = new mongoose.Schema({
   },
   memo: {
     type: String,
-    default: ''
+    default: ""
   }
 })
 
-let Compacts = mongoose.model('compacts', schema)
+let Compacts = mongoose.model("Compacts", schema, "compacts")
 
 module.exports = Compacts

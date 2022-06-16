@@ -1,4 +1,4 @@
-let mongoose = require('mongoose')
+let mongoose = require("mongoose")
 
 //用户对象
 let schema = new mongoose.Schema({
@@ -9,10 +9,10 @@ let schema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: ''
+    default: ""
   }
 })
 
-let Admins = mongoose.model('admins', schema)
+let Admins = mongoose.model("Admins", schema, "admins")
 
 module.exports = Admins

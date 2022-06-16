@@ -16,21 +16,33 @@
         ><div class="comInf">
           <el-row :gutter="5"
             ><el-col :span="6"><div>租户编号:</div></el-col>
-            <el-col :span="18"><div>XXX</div></el-col></el-row
+            <el-col :span="18"
+              ><div>{{ company.id }}</div></el-col
+            ></el-row
           >
-          <el-row :gutter="5">公司名:</el-row>
+          <el-row :gutter="5"
+            ><b>{{ company.name }}</b></el-row
+          >
           <el-row :gutter="5"
             ><el-col :span="6"><div>租赁楼层:</div></el-col>
-            <el-col :span="6"><div>XXX</div></el-col>
+            <el-col :span="6"
+              ><div>{{ company.level }}</div></el-col
+            >
             <el-col :span="6"><div>门牌编号:</div></el-col>
-            <el-col :span="6"><div>XXX</div></el-col></el-row
+            <el-col :span="6"
+              ><div>{{ company.doorNum }}</div></el-col
+            ></el-row
           >
 
           <el-row :gutter="5"
             ><el-col :span="6"><div>租户行业:</div></el-col>
-            <el-col :span="6"><div>XXX</div></el-col>
+            <el-col :span="6"
+              ><div>{{ company.business }}</div></el-col
+            >
             <el-col :span="6"><div>租户状态:</div></el-col>
-            <el-col :span="6"><div>XXX</div></el-col></el-row
+            <el-col :span="6"
+              ><div>{{ company.status }}</div></el-col
+            ></el-row
           >
         </div>
       </el-col>
@@ -47,22 +59,48 @@
           <span>公司详情</span>
         </div>
         <el-descriptions :column="2">
-          <el-descriptions-item label="企业简称">XXX</el-descriptions-item>
-          <el-descriptions-item label="外文名">XXX</el-descriptions-item>
-          <el-descriptions-item label="税务登记号">XXX</el-descriptions-item>
-          <el-descriptions-item label="条形码"> XXX </el-descriptions-item>
-          <el-descriptions-item label="客户性质">XXX</el-descriptions-item>
-          <el-descriptions-item label="法人代表">XXX</el-descriptions-item>
-          <el-descriptions-item label="生产经营许可证"
-            >XXX</el-descriptions-item
-          >
-          <el-descriptions-item label="纳税人类型">XXX</el-descriptions-item>
-          <el-descriptions-item label="GSP认证"> XXX </el-descriptions-item>
-          <el-descriptions-item label="上级客户">XXX</el-descriptions-item>
-          <el-descriptions-item label="工商注册号">XXX</el-descriptions-item>
-          <el-descriptions-item label="客户分类">XXX</el-descriptions-item>
-          <el-descriptions-item label="备注"> XXX </el-descriptions-item>
-          <el-descriptions-item label="地址">XXX</el-descriptions-item>
+          <el-descriptions-item label="企业简称">{{
+            company.nameShort
+          }}</el-descriptions-item>
+          <el-descriptions-item label="外文名">{{
+            company.nameEn
+          }}</el-descriptions-item>
+          <el-descriptions-item label="税务登记号">{{
+            company.taxNum
+          }}</el-descriptions-item>
+          <el-descriptions-item label="条形码">
+            {{ company.barCode }}
+          </el-descriptions-item>
+          <el-descriptions-item label="客户性质">{{
+            company.charater
+          }}</el-descriptions-item>
+          <el-descriptions-item label="法人代表">{{
+            company.legalPer
+          }}</el-descriptions-item>
+          <el-descriptions-item label="生产经营许可证">{{
+            company.license
+          }}</el-descriptions-item>
+          <el-descriptions-item label="纳税人类型">{{
+            company.taxPayer
+          }}</el-descriptions-item>
+          <el-descriptions-item label="GSP认证">
+            {{ company.gsp }}
+          </el-descriptions-item>
+          <el-descriptions-item label="上级客户">{{
+            company.superior
+          }}</el-descriptions-item>
+          <el-descriptions-item label="工商注册号">{{
+            company.registrationNum
+          }}</el-descriptions-item>
+          <el-descriptions-item label="客户分类">{{
+            company.category
+          }}</el-descriptions-item>
+          <el-descriptions-item label="备注">
+            {{ company.memo }}
+          </el-descriptions-item>
+          <el-descriptions-item label="地址">{{
+            company.location
+          }}</el-descriptions-item>
         </el-descriptions>
       </el-card>
     </el-row>
@@ -107,8 +145,29 @@ export default {
         endTime: null,
         doorNum: null,
         memo: null
+      },
+      company: {
+        id: null,
+        name: null,
+        level: null,
+        doorNum: [],
+        business: null,
+        status: null,
+        nameShort: null,
+        nameEn: null,
+        taxNum: null,
+        barCode: null,
+        charater: null,
+        legalPer: null,
+        license: null,
+        taxPayer: null,
+        gsp: null,
+        superior: null,
+        registrationNum: null,
+        category: null,
+        memo: null,
+        location: null
       }
-      // compact: null
     }
   },
   created() {
@@ -125,7 +184,19 @@ export default {
         }
       }).then((res) => {
         console.log(res)
-        this.compact = res.result
+        if (res.code === 200) {
+          this.compact = res.result
+        }
+      })
+      this.$http({
+        path: "/companies/findOne",
+        method: "get",
+        params: {
+          id: comId
+        }
+      }).then((res) => {
+        console.log(res)
+        this.company = res.result
       })
     }
   }

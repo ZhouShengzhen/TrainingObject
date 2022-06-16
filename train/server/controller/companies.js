@@ -1,4 +1,4 @@
-let Companies = require('../model/companies')
+let Companies = require("../model/companies")
 
 /**
  * 添加租户
@@ -10,19 +10,19 @@ const add = async (ctx) => {
       if (rel) {
         ctx.body = {
           code: 200,
-          msg: '添加租户成功'
+          msg: "添加租户成功"
         }
       } else {
         ctx.body = {
           code: 300,
-          msg: '添加租户失败'
+          msg: "添加租户失败"
         }
       }
     })
     .catch((err) => {
       ctx.body = {
         code: 500,
-        msg: '添加租户时出现异常',
+        msg: "添加租户时出现异常",
         err
       }
     })
@@ -73,7 +73,7 @@ const findAll = async (ctx) => {
       if (rel && rel.length > 0) {
         ctx.body = {
           code: 200,
-          msg: '租户查询成功',
+          msg: "租户查询成功",
           result: rel,
           page,
           pageSize,
@@ -82,21 +82,21 @@ const findAll = async (ctx) => {
       } else {
         ctx.body = {
           code: 300,
-          msg: '没有查询到租户'
+          msg: "没有查询到租户"
         }
       }
     })
     .catch((err) => {
       ctx.body = {
         code: 500,
-        msg: '租户查询时出现异常',
+        msg: "租户查询时出现异常",
         err
       }
     })
 }
 
 /**
- * 查询单个文章
+ * 查询单个租户
  */
 const findOne = async (ctx) => {
   let { id } = ctx.query
@@ -107,20 +107,20 @@ const findOne = async (ctx) => {
         isRead = true
         ctx.body = {
           code: 200,
-          msg: '租户查询成功',
+          msg: "租户查询成功",
           result: rel
         }
       } else {
         ctx.body = {
           code: 300,
-          msg: '租户查询失败'
+          msg: "租户查询失败"
         }
       }
     })
     .catch((err) => {
       ctx.body = {
         code: 500,
-        msg: '租户查询时出现异常',
+        msg: "租户查询时出现异常",
         err
       }
     })
@@ -165,19 +165,19 @@ const update = async (ctx) => {
       if (rel.n > 0) {
         ctx.body = {
           code: 200,
-          msg: '租户更新成功'
+          msg: "租户更新成功"
         }
       } else {
         ctx.body = {
           code: 300,
-          msg: '租户更新失败'
+          msg: "租户更新失败"
         }
       }
     })
     .catch((err) => {
       ctx.body = {
         code: 500,
-        msg: '租户更新时出现异常',
+        msg: "租户更新时出现异常",
         err
       }
     })
@@ -193,19 +193,19 @@ const del = async (ctx) => {
       if (rel) {
         ctx.body = {
           code: 200,
-          msg: '文章删除成功'
+          msg: "文章删除成功"
         }
       } else {
         ctx.body = {
           code: 300,
-          msg: '文章删除失败'
+          msg: "文章删除失败"
         }
       }
     })
     .catch((err) => {
       ctx.body = {
         code: 500,
-        msg: '文章删除时出现异常'
+        msg: "文章删除时出现异常"
       }
     })
 }

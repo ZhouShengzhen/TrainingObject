@@ -26,7 +26,7 @@
         >
         </el-option>
       </el-select>
-      <el-button type="primary">查询</el-button>
+      <el-button type="primary" @click="query()">查询</el-button>
       <el-button type="primary">导出</el-button>
       <el-button type="primary">导入租户</el-button>
       <el-button type="primary">导入合同</el-button>
@@ -40,8 +40,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="租户编号" prop="comId"></el-table-column>
-        <el-table-column label="租户名称" prop="comName"></el-table-column>
+        <el-table-column label="租户编号" prop="id"></el-table-column>
+        <el-table-column label="租户名称" prop="name"></el-table-column>
         <el-table-column label="联系人" prop="callName"></el-table-column>
         <el-table-column label="联系电话" prop="callNum"></el-table-column>
         <el-table-column label="租赁楼层" prop="level"></el-table-column>
@@ -49,9 +49,12 @@
         <el-table-column label="租户行业" prop="business"></el-table-column>
         <el-table-column
           label="合同开始时间"
-          prop="beginTime"
+          prop="compactCom[0].beginTime"
         ></el-table-column>
-        <el-table-column label="合同结束时间" prop="endTime"></el-table-column>
+        <el-table-column
+          label="合同结束时间"
+          prop="compactCom[0].endTime"
+        ></el-table-column>
         <el-table-column label="状态" prop="status"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -81,31 +84,35 @@ export default {
   data() {
     return {
       lines: null,
-      comIdInput: "",
-      beginTimeInput: Date.now(),
+      comIdInput: null,
+      beginTimeInput: null,
       options: [
         {
-          value: "选项1",
-          label: "L1"
+          value: null,
+          lable: "全部楼层"
         },
         {
-          value: "选项2",
-          label: "L2"
+          value: "LV1",
+          label: "LV1"
         },
         {
-          value: "选项3",
-          label: "L3"
+          value: "LV2",
+          label: "LV2"
         },
         {
-          value: "选项4",
-          label: "L4"
+          value: "LV3",
+          label: "LV3"
         },
         {
-          value: "选项5",
-          label: "L5"
+          value: "LV4",
+          label: "LV4"
+        },
+        {
+          value: "LV5",
+          label: "LV5"
         }
       ],
-      value: "",
+      value: null,
       checked: false
     }
   },
@@ -117,7 +124,11 @@ export default {
       this.$http({
         path: "/lines/findAll",
         method: "get",
-        params: null
+        params: {
+          idInput: this.comIdInput,
+          level: this.value
+          // beginTimeInput: this.beginTimeInput
+        }
       }).then((res) => {
         this.lines = res.date
         console.log(this.lines)
@@ -127,10 +138,12 @@ export default {
       this.$router.push({
         path: "/admin/companies/detail",
         query: {
-          comId: row.comId,
-          comName: row.comName
+          comId: row.id
         }
       })
+    },
+    query() {
+      this.getData()
     },
     toggleSelection(rows) {
       if (rows) {

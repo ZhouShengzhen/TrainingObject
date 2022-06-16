@@ -1,20 +1,21 @@
-const Koa = require('koa')
+const Koa = require("koa")
 const app = new Koa()
-const views = require('koa-views')
-const json = require('koa-json')
-const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger')
-const MongoConnect = require('./db')
-const cors = require('koa2-cors')
-const koajwt = require('koa-jwt')
+const views = require("koa-views")
+const json = require("koa-json")
+const onerror = require("koa-onerror")
+const bodyparser = require("koa-bodyparser")
+const logger = require("koa-logger")
+const MongoConnect = require("./db")
+const cors = require("koa2-cors")
+const koajwt = require("koa-jwt")
 
-const index = require('./routes/index')
-const companies = require('./routes/companies')
-const admins = require('./routes/admins')
-const upload = require('./routes/upload')
-const compacts = require('./routes/compacts')
-const lines = require('./routes/lines')
+const index = require("./routes/index")
+const companies = require("./routes/companies")
+const admins = require("./routes/admins")
+const upload = require("./routes/upload")
+const compacts = require("./routes/compacts")
+const lines = require("./routes/lines")
+const staffs = require("./routes/staffs")
 
 // error handler
 onerror(app)
@@ -23,21 +24,21 @@ MongoConnect()
 // middlewares
 app.use(
   bodyparser({
-    enableTypes: ['json', 'form', 'text']
+    enableTypes: ["json", "form", "text"]
   })
 )
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
+app.use(require("koa-static")(__dirname + "/public"))
 app.use(cors())
 app.use(
-  views(__dirname + '/views', {
-    extension: 'ejs'
+  views(__dirname + "/views", {
+    extension: "ejs"
   })
 )
 app.use(
   koajwt({
-    secret: 'train-server-jwt'
+    secret: "train-server-jwt"
   }).unless({
     path: [/^\/admins\/login/, /^\/admins\/reg/]
   })
@@ -57,10 +58,11 @@ app.use(admins.routes(), admins.allowedMethods())
 app.use(upload.routes(), upload.allowedMethods())
 app.use(compacts.routes(), compacts.allowedMethods())
 app.use(lines.routes(), lines.allowedMethods())
+app.use(staffs.routes(), staffs.allowedMethods())
 
 // error-handling
-app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
+app.on("error", (err, ctx) => {
+  console.error("server error", err, ctx)
 })
 
 module.exports = app
