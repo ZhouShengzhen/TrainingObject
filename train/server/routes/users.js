@@ -1,7 +1,7 @@
-const { login, reg, verify, updatePwd } = require("../controller/admins")
+const { login, reg, verify } = require("../controller/users")
 const router = require("koa-router")()
 
-router.prefix("/admins")
+router.prefix("/users")
 
 // 管理员登陆
 router.post("/login", login)
@@ -9,10 +9,7 @@ router.post("/login", login)
 // 管理员注册
 router.post("/reg", reg)
 
-//验证管理员登录
+//验证用户登录
 router.get("/verify", verify)
-
-//修改密码
-router.post("/update", updatePwd)
 
 module.exports = router

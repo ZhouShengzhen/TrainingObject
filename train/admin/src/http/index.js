@@ -1,22 +1,22 @@
-import axios from 'axios'
+import axios from "axios"
 
 let instance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: "http://localhost:3000",
   timeout: 5000
 })
 
 instance.interceptors.request.use(
   (config) => {
-    // if (localStorage.token) {
-    //   config.headers.authorization = 'Bearer ' + localStorage.token
-    // }
-    config.headers.authorization =
-      'Bearer ' +
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsIl9pZCI6IjYyYTgyNTg4OGM2ODRkODhmYmQ1MTk0OSIsImlhdCI6MTY1NTE4NzgxMywiZXhwIjoxNjU1NzkyNjEzfQ.ypkK1J9y3AvLePcJFe729fGGmhkcYhGK92m77ZSDu0I'
+    if (localStorage.token) {
+      config.headers.authorization = "Bearer " + localStorage.token
+    }
+    // config.headers.authorization =
+    //   'Bearer ' +
+    //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsIl9pZCI6IjYyYTgyNTg4OGM2ODRkODhmYmQ1MTk0OSIsImlhdCI6MTY1NTE4NzgxMywiZXhwIjoxNjU1NzkyNjEzfQ.ypkK1J9y3AvLePcJFe729fGGmhkcYhGK92m77ZSDu0I'
     return config
   },
   (err) => {
-    console.error('请求失败', err)
+    console.error("请求失败", err)
   }
 )
 
@@ -34,7 +34,7 @@ instance.interceptors.response.use(
 
 async function http(option = {}) {
   let result = null
-  if (option.method === 'get' || option.method === 'delete') {
+  if (option.method === "get" || option.method === "delete") {
     await instance[option.method](option.path, { params: option.params })
       .then((res) => {
         result = res.data
@@ -42,7 +42,7 @@ async function http(option = {}) {
       .catch((err) => {
         result = err
       })
-  } else if (option.method === 'post' || option.method === 'put') {
+  } else if (option.method === "post" || option.method === "put") {
     await instance[option.method](option.path, option.params)
       .then((res) => {
         result = res.data

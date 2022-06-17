@@ -16,6 +16,7 @@ const upload = require("./routes/upload")
 const compacts = require("./routes/compacts")
 const lines = require("./routes/lines")
 const staffs = require("./routes/staffs")
+const users = require("./routes/users")
 
 // error handler
 onerror(app)
@@ -40,7 +41,12 @@ app.use(
   koajwt({
     secret: "train-server-jwt"
   }).unless({
-    path: [/^\/admins\/login/, /^\/admins\/reg/]
+    path: [
+      /^\/admins\/login/,
+      /^\/admins\/reg/,
+      /^\/users\/login/,
+      /^\/users\/reg/
+    ]
   })
 )
 // logger
@@ -59,6 +65,7 @@ app.use(upload.routes(), upload.allowedMethods())
 app.use(compacts.routes(), compacts.allowedMethods())
 app.use(lines.routes(), lines.allowedMethods())
 app.use(staffs.routes(), staffs.allowedMethods())
+app.use(users.routes(), users.allowedMethods())
 
 // error-handling
 app.on("error", (err, ctx) => {

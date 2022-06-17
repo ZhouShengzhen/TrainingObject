@@ -1,14 +1,14 @@
 let jwt = require("jsonwebtoken")
-let Admins = require("../model/admins")
+let Users = require("../model/users")
 
 /**
- * 管理员登陆
+ * 用户登陆
  */
 
 const login = async (ctx) => {
   let { username, pwd } = ctx.request.body
 
-  await Admins.findOne({ username, pwd })
+  await Users.findOne({ username, pwd })
     .then((rel) => {
       if (rel) {
         let token = jwt.sign(
@@ -29,7 +29,7 @@ const login = async (ctx) => {
       } else {
         ctx.body = {
           code: 300,
-          msg: "管理员名或密码错误"
+          msg: "用户名或密码错误"
         }
       }
     })
@@ -46,23 +46,23 @@ const login = async (ctx) => {
  * 管理员注册
  */
 const reg = async (ctx) => {
-  let { username, pwd } = ctx.request.body
+  let { id, username, pwd } = ctx.request.body
 
   let isDouble = false
 
-  await Admins.findOne({ username }).then((rel) => {
+  await Users.findOne({ username }).then((rel) => {
     if (rel) isDouble = true
   })
 
   if (isDouble) {
     ctx.body = {
       code: 300,
-      msg: "管理员名已经存在"
+      msg: "租户名已经存在"
     }
     return
   }
 
-  await Admins.create({ username, pwd })
+  await Users.create({ id, username, pwd })
     .then((rel) => {
       if (rel) {
         ctx.body = {
@@ -86,7 +86,7 @@ const reg = async (ctx) => {
 }
 
 /**
- * 验证管理员登录
+ * 验证用户登录
  */
 const verify = async (ctx) => {
   let token = ctx.header.authorization
@@ -94,67 +94,37 @@ const verify = async (ctx) => {
 
   try {
     let result = jwt.verify(token, "train-server-jwt")
-    await Admins.findOne({ _id: result._id })
+    await Users.findOne({ _id: result._id })
       .then((rel) => {
         if (rel) {
           ctx.body = {
             code: 200,
-            msg: "管理员认证成功",
+            msg: "用户认证成功",
             user: rel
           }
         } else {
           ctx.body = {
             code: 500,
-            msg: "管理员认证失败"
+            msg: "用户认证失败"
           }
         }
       })
       .catch((err) => {
         ctx.body = {
           code: 500,
-          msg: "管理员认证失败"
+          msg: "用户认证失败"
         }
       })
   } catch (err) {
     ctx.body = {
       code: 500,
-      msg: "管理员认证失败"
+      msg: "用户认证失败"
     }
   }
-}
-
-/**
- * 修改管理员密码
- */
-const updatePwd = async (ctx) => {
-  let { username, pwd } = ctx.request.body
-
-  await Admins.updateOne({ username }, { pwd })
-    .then((rel) => {
-      if (rel.n > 0) {
-        ctx.body = {
-          code: 200,
-          msg: "密码修改成功"
-        }
-      } else {
-        ctx.body = {
-          code: 300,
-          msg: "密码修改失败"
-        }
-      }
-    })
-    .catch((err) => {
-      ctx.body = {
-        code: 500,
-        msg: "修改密码时出现异常",
-        err
-      }
-    })
 }
 
 module.exports = {
   login,
   reg,
-  verify,
-  updatePwd
+  verify
 }

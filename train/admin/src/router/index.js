@@ -125,7 +125,7 @@ const routes = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/admins/login.vue"),
+    component: () => import("@/views/Login/login.vue"),
     mate: {
       title: "用户登陆"
     }
@@ -139,3 +139,9 @@ const router = new VueRouter({
 })
 
 export default router
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch((err) => err)
+}
