@@ -122,7 +122,7 @@ export default {
   methods: {
     getData() {
       this.$http({
-        path: "/lines/findAll",
+        path: "/lines/findAllCom",
         method: "get",
         params: {
           idInput: this.comIdInput,

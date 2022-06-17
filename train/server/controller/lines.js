@@ -59,30 +59,6 @@ let Compacts = require("../model/compacts")
 // }
 
 // const findAll = async (ctx) => {
-//   console.log("findBefore")
-//   await Companies.aggregate([
-//     {
-//       $lookup: {
-//         from: "compacts",
-//         localField: "id",
-//         foreignField: "comId",
-//         as: "compactCom"
-//       }
-//     }
-//   ]).then((rel) => {
-//     ctx.body = {
-//       code: 200,
-//       date: rel
-//     }
-//   })
-// }
-
-// let matchId = {
-//   enable: true,
-//   id: null
-// }
-
-// const findAll = async (ctx) => {
 //   let { idInput, level, beginTimeInput } = ctx.query
 //   console.log(idInput)
 //   console.log(beginTimeInput)
@@ -136,7 +112,7 @@ let Compacts = require("../model/compacts")
 //   })
 // }
 
-const findAll = async (ctx) => {
+const findAllCom = async (ctx) => {
   let { idInput, level } = ctx.query
   const matchId = {}
   const matchLevel = {}
@@ -169,6 +145,39 @@ const findAll = async (ctx) => {
   })
 }
 
+const findAllStaff = async (ctx) => {
+  let { idInput, level } = ctx.query
+  const matchId = {}
+  const matchLevel = {}
+  if (idInput) {
+    matchId.id = Number(idInput)
+  }
+  if (level) {
+    matchLevel.level = level
+  }
+  await Companies.aggregate([
+    {
+      $lookup: {
+        from: "compacts",
+        localField: "id",
+        foreignField: "comId",
+        as: "compactCom"
+      }
+    },
+    {
+      $match: matchId
+    },
+    {
+      $match: matchLevel
+    }
+  ]).then((rel) => {
+    ctx.body = {
+      code: 200,
+      date: rel
+    }
+  })
+}
 module.exports = {
-  findAll
+  findAllStaff,
+  findAllCom
 }

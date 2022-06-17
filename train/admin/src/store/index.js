@@ -5,15 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: {},
-    admin: {}
+    user: {}
   },
   mutations: {
     setUsername(state, user) {
       state.user = user
-    },
-    setAdminname(state, admin) {
-      state.admin = admin
     }
   },
   plugins: [persistedstate()]

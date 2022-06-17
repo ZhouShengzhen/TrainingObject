@@ -20,7 +20,7 @@ export default (router) => {
     if (localStorage.token) {
       //验证token是否有效，并获取用户信息及权限
 
-      console.log("setToken")
+      console.log(localStorage.token)
       http({
         path: "/users/verify",
         method: "get"
@@ -28,17 +28,32 @@ export default (router) => {
         if (res.code === 200) {
           store.commit("setUsername", res.user)
           console.log(res)
-          if (to.path !== "/login") {
-            next()
-          } else {
-            next("/admin")
-          }
+          next()
         } else {
+          http({
+            path: "/admins/verify",
+            method: "get"
+          }).then((res) => {
+            if (res.code === 200) {
+              store.commit("setUsername", res.user)
+              console.log(res)
+              next()
+            } else {
+              if (to.path !== "/login") {
+                next("/login")
+              } else {
+                next()
+              }
+              console.log("nores")
+            }
+          })
+
           if (to.path !== "/login") {
             next("/login")
           } else {
             next()
           }
+          console.log("nores")
         }
       })
     } else {
