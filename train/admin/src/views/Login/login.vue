@@ -88,11 +88,13 @@ export default {
             if (res.code === 200) {
               localStorage.token = res.token
               if (this.state) {
+                localStorage.identity = "user"
                 console.log("gotoUser" + this.state)
                 this.$router.push({
                   path: "/user"
                 })
               } else {
+                localStorage.identity = "admin"
                 console.log("gotoAdmin" + this.state)
                 this.$router.push({
                   path: "/admin"

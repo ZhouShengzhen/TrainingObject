@@ -9,7 +9,15 @@ let schema = new mongoose.Schema({
   },
   cardNum: String,
   id: Number,
-  status: String
+  status: String,
+  possessed: {
+    type: Boolean,
+    default: true
+  },
+  faceUnlock: {
+    type: Boolean,
+    default: true
+  }
 })
 
 let Cards = mongoose.model("Cards", schema, "cards")

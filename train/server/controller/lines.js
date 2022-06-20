@@ -2,6 +2,8 @@ let { forEach, assignIn, get } = require("lodash")
 var moment = require("moment-timezone")
 let Companies = require("../model/companies")
 let Compacts = require("../model/compacts")
+let Staffs = require("../model/staffs")
+let Card = require("../model/cards")
 
 /**
  * 使用异步请求方式实现
@@ -58,34 +60,69 @@ let Compacts = require("../model/compacts")
 //   }
 // }
 
-// const findAll = async (ctx) => {
-//   let { idInput, level, beginTimeInput } = ctx.query
-//   console.log(idInput)
-//   console.log(beginTimeInput)
-//   // let a = moment(beginTimeInput).tz("Asia/Shanghai").format()
-//   // a = moment(beginTimeInput)
-//   // console.log(moment.tz.names())
+const findAllCom = async (ctx) => {
+  let { idInput, level, beginTimeInput } = ctx.query
+  console.log(idInput)
+  console.log(beginTimeInput)
+  // let a = moment(beginTimeInput).tz("Asia/Shanghai").format()
+  // a = moment(beginTimeInput)
+  // console.log(moment.tz.names())
 
+  let matchId = {}
+  let matchLevel = {}
+  let matchBeginTime = {}
+  if (idInput) {
+    matchId.id = Number(idInput)
+  }
+  if (level) {
+    matchLevel.level = level
+  }
+  if (beginTimeInput) {
+    matchBeginTime = {
+      "compactCom.beginTime": {
+        $gte: new Date(beginTimeInput)
+      }
+    }
+  }
+  console.log(matchId)
+  console.log(matchLevel)
+  console.log(matchBeginTime)
+  await Companies.aggregate([
+    {
+      $lookup: {
+        from: "compacts",
+        localField: "id",
+        foreignField: "comId",
+        as: "compactCom"
+      }
+    },
+    {
+      $match: matchId
+    },
+    {
+      $match: matchLevel
+    },
+    {
+      $match: matchBeginTime
+    }
+  ]).then((rel) => {
+    ctx.body = {
+      code: 200,
+      date: rel
+    }
+  })
+}
+
+// const findAllCom = async (ctx) => {
+//   let { idInput, level } = ctx.query
 //   const matchId = {}
 //   const matchLevel = {}
-//   const matchBeginTime = {}
 //   if (idInput) {
 //     matchId.id = Number(idInput)
 //   }
 //   if (level) {
 //     matchLevel.level = level
 //   }
-//   if (beginTimeInput) {
-//     matchBeginTime.compactCom = {
-//       $elemMatch: {
-//         // $gte: new Date(beginTimeInput)
-//         $gte: new Date(moment(beginTimeInput).tz("Asia/Shanghai").format())
-//       }
-//     }
-//   }
-//   console.log(matchId)
-//   console.log(matchLevel)
-//   console.log(matchBeginTime)
 //   await Companies.aggregate([
 //     {
 //       $lookup: {
@@ -100,9 +137,6 @@ let Compacts = require("../model/compacts")
 //     },
 //     {
 //       $match: matchLevel
-//     },
-//     {
-//       $match: matchBeginTime
 //     }
 //   ]).then((rel) => {
 //     ctx.body = {
@@ -112,63 +146,59 @@ let Compacts = require("../model/compacts")
 //   })
 // }
 
-const findAllCom = async (ctx) => {
-  let { idInput, level } = ctx.query
-  const matchId = {}
-  const matchLevel = {}
-  if (idInput) {
-    matchId.id = Number(idInput)
-  }
-  if (level) {
-    matchLevel.level = level
-  }
-  await Companies.aggregate([
-    {
-      $lookup: {
-        from: "compacts",
-        localField: "id",
-        foreignField: "comId",
-        as: "compactCom"
-      }
-    },
-    {
-      $match: matchId
-    },
-    {
-      $match: matchLevel
-    }
-  ]).then((rel) => {
-    ctx.body = {
-      code: 200,
-      date: rel
-    }
-  })
-}
-
 const findAllStaff = async (ctx) => {
-  let { idInput, level } = ctx.query
-  const matchId = {}
-  const matchLevel = {}
-  if (idInput) {
-    matchId.id = Number(idInput)
-  }
+  let { stringInput, level, stetusInput } = ctx.query
+  let str = ".*" + stringInput + ".*$"
+  let reg = new RegExp(str)
+  console.log(stringInput)
+  let matchString = {}
+  let matchLevel = {}
+  let matchStetus = {}
   if (level) {
-    matchLevel.level = level
+    matchLevel = { levels: { $elemMatch: { $eq: level } } }
   }
-  await Companies.aggregate([
+  if (stringInput) {
+    matchString = {
+      $or: [
+        { name: { $regex: reg } },
+        { callNum: { $regex: reg } },
+        { certNum: { $regex: reg } },
+        { comName: { $regex: reg } }
+      ]
+    }
+  }
+  let stetusInputBool = true
+  if (stetusInput === "false") {
+    stetusInputBool = false
+  }
+  if (stetusInput) {
+    matchStetus = { "cardPart.possessed": stetusInputBool }
+  }
+  await Staffs.aggregate([
     {
       $lookup: {
-        from: "compacts",
-        localField: "id",
-        foreignField: "comId",
-        as: "compactCom"
+        from: "companies",
+        localField: "comName",
+        foreignField: "name",
+        as: "comPart"
       }
     },
     {
-      $match: matchId
+      $lookup: {
+        from: "cards",
+        localField: "name",
+        foreignField: "username",
+        as: "cardPart"
+      }
+    },
+    {
+      $match: matchString
     },
     {
       $match: matchLevel
+    },
+    {
+      $match: matchStetus
     }
   ]).then((rel) => {
     ctx.body = {

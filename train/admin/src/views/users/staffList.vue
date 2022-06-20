@@ -225,9 +225,10 @@ export default {
     fun(row) {
       console.log(row)
     },
-    resetForm(staffInf) {
+
+    resetForm(cardInf) {
       console.log("reset")
-      this.$refs[staffInf].resetFields()
+      this.$refs[cardInf].resetFields()
     },
     handleClose(done) {
       this.$confirm("确认关闭？")

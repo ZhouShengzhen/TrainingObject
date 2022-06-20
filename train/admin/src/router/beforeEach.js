@@ -19,46 +19,49 @@ export default (router) => {
     //校验是否存在token
     if (localStorage.token) {
       //验证token是否有效，并获取用户信息及权限
-
-      console.log(localStorage.token)
-      http({
-        path: "/users/verify",
-        method: "get"
-      }).then((res) => {
-        if (res.code === 200) {
-          store.commit("setUsername", res.user)
-          console.log(res)
-          next()
-        } else {
-          http({
-            path: "/admins/verify",
-            method: "get"
-          }).then((res) => {
-            if (res.code === 200) {
-              store.commit("setUsername", res.user)
-              console.log(res)
+      if (localStorage.identity === "user") {
+        http({
+          path: "/users/verify",
+          method: "get"
+        }).then((res) => {
+          if (res.code === 200) {
+            store.commit("setUsername", res.user)
+            if (to.path !== "/login") {
               next()
             } else {
-              if (to.path !== "/login") {
-                next("/login")
-              } else {
-                next()
-              }
-              console.log("nores")
+              next("/user")
             }
-          })
-
-          if (to.path !== "/login") {
-            next("/login")
           } else {
-            next()
+            if (to.path !== "/login") {
+              next("/login")
+            } else {
+              next()
+            }
           }
-          console.log("nores")
-        }
-      })
+        })
+      } else {
+        http({
+          path: "/admins/verify",
+          method: "get"
+        }).then((res) => {
+          if (res.code === 200) {
+            store.commit("setAdminname", res.user)
+            if (to.path !== "/login") {
+              next()
+            } else {
+              next("/admin")
+            }
+          } else {
+            if (to.path !== "/login") {
+              next("/login")
+            } else {
+              next()
+            }
+          }
+        })
+      }
     } else {
       //判断当前要跳转的路由是否为'/login'，如果不加此判断，会报内存溢出的错误
-      console.log("setTokenButNone")
       if (to.path !== "/login") {
         next("/login")
       } else {
