@@ -4,34 +4,16 @@
       <div class="login-title">租户管理系统</div>
       <el-form :model="form" status-icon :rules="rules" ref="ruleForm">
         <el-form-item prop="username">
-          <el-input
-            type="text"
-            v-model.trim="form.username"
-            placeholder="请输入用户名"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="text" v-model.trim="form.username" placeholder="请输入用户名" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="pwd">
-          <el-input
-            type="password"
-            v-model.trim="form.pwd"
-            placeholder="请输入密码"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="password" v-model.trim="form.pwd" placeholder="请输入密码" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item class="login-btn">
-          <el-switch
-            style="margin-right: 20px"
-            v-model="state"
-            inactive-color="#F56C6C"
-            :inactive-text="state ? '切换身份' : '切换身份'"
-            @change="changeState"
-          ></el-switch>
-          <el-button
-            :type="state ? 'primary' : 'danger'"
-            @click="submit('ruleForm')"
-            >{{ state ? "租户登陆" : "管理员登陆" }}</el-button
-          >
+          <el-switch style="margin-right: 20px" v-model="state" inactive-color="#F56C6C"
+            :inactive-text="state ? '切换身份' : '切换身份'" @change="changeState"></el-switch>
+          <el-button :type="state ? 'primary' : 'danger'" @click="submit('ruleForm')">{{ state ? "租户登陆" : "管理员登陆" }}
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -130,11 +112,13 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 /* el-card卡片组件样式 */
 .el-card {
   width: 420px;
   height: 300px;
 }
+
 /* 登录标题样式 */
 .login-title {
   font-size: 24px;
@@ -143,6 +127,7 @@ export default {
   margin-bottom: 50px;
   color: #333;
 }
+
 /* 登录按钮 */
 .login-btn {
   text-align: right;

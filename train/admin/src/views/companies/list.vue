@@ -9,7 +9,7 @@
       <el-date-picker v-model="beginTimeInput" type="date" placeholder="请选择合同开始的时间">
       </el-date-picker>
       <el-select v-model="level" placeholder="租赁楼层选择">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-option v-for="item in levels" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
       <el-button type="primary" @click="query()">查询</el-button>
@@ -58,11 +58,12 @@ export default {
     return {
       lines: null,
       comIdInput: null,
+      level: null,
       beginTimeInput: null,
-      options: [
+      levels: [
         {
           value: null,
-          lable: "全部楼层"
+          lable: "allLV"
         },
         {
           value: "LV1",
